@@ -1,0 +1,131 @@
+#! /usr/bin/env ruby
+
+require 'tablescript'
+require 'coop_al'
+require 'date'
+
+def version
+  puts "Coop v#{CoopAl::VERSION} - \"Reality is frequently inaccurate.\""
+  exit
+end
+
+def display_message(message)
+  puts
+  puts message
+end
+
+def usage(message = nil)
+  puts 'coop [options] resource [resource...]'
+  puts '  --path <path1>[,<path2>,...] Specify path to follow'
+  puts '  --path-file <filename>       Specify paths in a file, one per line'
+  puts '  --no-loot                    Do not report loot'
+  puts '  --no-xp                      Do not report accumulated XP'
+  puts '  --no-paths                   Do not report available paths'
+  puts '  --party-size n               Total XP and treasure is divided by n [6]'
+  puts '  --encounter-count n          Encounters per session [10]'
+  puts '  --end-date YYYY-MM-DD        Most recent session [today]'
+  puts '  --session-frequency n        Sessions every n days [7]'
+  puts '  --blackout-dates YYYY-MM-DD[,YYYY-MM-DD,...]'
+  puts '  --skip-frequency n           Chance of skipping week is 1 in n [never]'
+  puts '  --srd                        Use included SRD file for monsters'
+  puts '  --trace                      Print encounter details'
+  puts '  --help                       Print this help'
+  display_message(message) unless message.nil?
+  exit
+end
+
+resource_files = []
+paths = []
+options = {
+  party_size: 6,
+  encounter_count: 10,
+  end_date: Date.today,
+  session_frequency: 7,
+  blackout_dates: []
+}
+until ARGV.empty?
+  parameter = ARGV.shift
+  case parameter
+  when '--help'
+    usage
+  when '--version'
+    version
+  when '--path'
+    usage unless paths.empty?
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    paths = parameter.split(',').map { |p| CoopAl::Path.parse(p) }
+  when '--path-file'
+    usage unless paths.empty?
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    File.open(parameter, 'r') do |f|
+      f.each_line do |line|
+        paths << CoopAl::Path.parse(line.strip)
+      end
+    end
+  when '--no-loot'
+    options[:show_loot] = false
+  when '--no-xp'
+    options[:show_xp] = false
+  when '--no-paths'
+    options[:show_paths] = false
+  when '--party-size'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:party_size] = parameter.to_i
+  when '--encounter-count'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:encounter_count] = parameter.to_i
+  when '--end-date'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:end_date] = Date.parse(parameter)
+  when '--session-frequency'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:session_frequency] = parameter.to_i
+  when '--blackout-dates'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:blackout_dates] = parameter.split(',').map { |d| Date.parse(d) }
+  when '--skip-frequency'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:skip_frequency] = parameter.to_i
+    usage('Invalid skip frequency') if options[:skip_frequency] < 1
+  when '--srd'
+    resource_files << File.expand_path('../res/srd.rb', File.dirname(__FILE__))
+  when '--trace'
+    CoopAl::Trace.instance.tracing = true
+  else
+    resource_files << parameter
+  end
+end
+
+usage('No resources specified') if resource_files.empty?
+begin
+  resource_files.each do |filename|
+    require filename
+  end
+rescue StandardError => e
+  puts e
+  exit
+end
+
+date_generator = CoopAl::SessionDateGenerator.new(options)
+log = CoopAl::SessionLog.new(date_generator, options)
+
+state = CoopAl::State.new
+follower = CoopAl::PathFollower.new(CoopAl::Library.instance, state)
+begin
+  follower.follow(paths, log)
+rescue StandardError => e
+  puts e
+  exit
+end
+
+CoopAl::StateReporter.new(state, CoopAl::Library.instance, options).report(STDOUT)
+
+log.dump(STDOUT)
