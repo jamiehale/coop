@@ -27,6 +27,7 @@ def usage(message = nil)
   puts '  --session-frequency n        Sessions every n days [7]'
   puts '  --blackout-dates YYYY-MM-DD[,YYYY-MM-DD,...]'
   puts '  --skip-frequency n           Chance of skipping week is 1 in n [never]'
+  puts '  --dm-name "Joe S."           DM name'
   puts '  --srd                        Use included SRD file for monsters'
   puts '  --trace                      Print encounter details'
   puts '  --help                       Print this help'
@@ -96,6 +97,10 @@ until ARGV.empty?
     usage if parameter.nil?
     options[:skip_frequency] = parameter.to_i
     usage('Invalid skip frequency') if options[:skip_frequency] < 1
+  when '--dm-name'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:dm_name] = parameter
   when '--srd'
     resource_files << File.expand_path('../res/srd.rb', File.dirname(__FILE__))
   when '--trace'
