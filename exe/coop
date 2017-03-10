@@ -39,6 +39,7 @@ paths = []
 options = {
   party_size: 6,
   encounter_count: 10,
+  dm_name: 'Gary G.',
   end_date: Date.today,
   session_frequency: 7,
   blackout_dates: []

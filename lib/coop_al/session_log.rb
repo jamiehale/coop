@@ -5,9 +5,9 @@ module CoopAl
   class SessionLog
     def initialize(date_generator, options)
       @date_generator = date_generator
-      @encounter_count = options.key?(:encounter_count) ? options[:encounter_count] : 10
-      @party_size = options.key?(:party_size) ? options[:party_size] : 6
-      @dm_name = options.key?(:dm_name) ? options[:dm_name] : 'Cameron'
+      @encounter_count = options[:encounter_count]
+      @party_size = options[:party_size]
+      @dm_name = options[:dm_name]
       @accumulated_xp = 0
       @accumulated_treasure = Value.new
       @sessions = []
