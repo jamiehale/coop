@@ -29,7 +29,7 @@ module CoopAl
     end
 
     def character_level
-      Coop::XpRequirementTable.new.level_from_xp(character_xp)
+      CoopAl::XpRequirementTable.new.level_from_xp(character_xp)
     end
 
     def report_loot(s)
