@@ -3,7 +3,8 @@ module CoopAl
   # SessionEncounter
   #
   class SessionEncounter
-    attr_reader :xp, :treasure
+    attr_reader :name, :xp, :treasure, :items
+
     def initialize(name, monsters, xp, treasure, items)
       @name = name
       @monster_counts = monster_counts(monsters)
@@ -15,6 +16,10 @@ module CoopAl
 
     def counts?
       @xp.nonzero?
+    end
+
+    def monsters_s
+      @monsters.map { |m| pluralize(m, @monster_counts[m]) }.join(', ')
     end
 
     def dump(s)
@@ -37,10 +42,6 @@ module CoopAl
         end
       end
       results
-    end
-
-    def monsters_s
-      @monsters.map { |m| pluralize(m, @monster_counts[m]) }.join(', ')
     end
 
     def pluralize(monster, count)

@@ -43,7 +43,8 @@ options = {
   dm_name: 'Gary G.',
   end_date: Date.today,
   session_frequency: 7,
-  blackout_dates: []
+  blackout_dates: [],
+  session_log_format: :text
 }
 until ARGV.empty?
   parameter = ARGV.shift
@@ -105,6 +106,11 @@ until ARGV.empty?
     parameter = ARGV.shift
     usage if parameter.nil?
     options[:session_log_file] = parameter
+  when '--session-log-format'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    usage unless ['text', 'json', 'yaml', 'csv'].include?(parameter)
+    options[:session_log_format] = parameter.to_sym
   when '--srd'
     resource_files << File.expand_path('../res/srd.rb', File.dirname(__FILE__))
   when '--trace'
@@ -140,6 +146,13 @@ CoopAl::StateReporter.new(state, CoopAl::Library.instance, options).report(STDOU
 
 if options[:session_log_file]
   File.open(options[:session_log_file], 'w') do |f|
-    log.dump(f)
+    case options[:session_log_format]
+    when :text
+      log.dump(f)
+    when :json
+    when :yaml
+      CoopAl::YamlSessionLogFormatter.new(f).write(log)
+    when :csv
+    end
   end
 end

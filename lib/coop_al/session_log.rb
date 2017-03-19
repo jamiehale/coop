@@ -3,6 +3,8 @@ module CoopAl
   # SessionLog
   #
   class SessionLog
+    attr_reader :sessions
+
     def initialize(date_generator, options)
       @date_generator = date_generator
       @encounter_count = options[:encounter_count]
