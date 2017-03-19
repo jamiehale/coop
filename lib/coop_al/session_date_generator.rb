@@ -32,7 +32,7 @@ module CoopAl
     def ok?(date)
       return false if @blackout_dates.include?(date)
       return true if @skip_frequency.nil?
-      return false if roll_dice("d#{@skip_frequency}") == 1
+      return false if roll("d#{@skip_frequency}") == 1
       true
     end
 

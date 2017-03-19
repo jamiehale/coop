@@ -60,7 +60,7 @@ module CoopAl
     private
 
     def expand_count(count)
-      return roll_dice(count) if count.is_a?(String)
+      return roll(count) if count.is_a?(String)
       count
     end
   end

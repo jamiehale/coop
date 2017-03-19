@@ -1,4 +1,9 @@
 require 'tablescript'
+include Tablescript::Api
+
+require 'rpg_lib'
+include RpgLib::Api
+
 require 'coop_al/treasure_tables'
 require 'coop_al/trace'
 require 'coop_al/version'

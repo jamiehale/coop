@@ -140,23 +140,23 @@ end
 #
 class String
   def platinum
-    CoopAl::Value.platinum(roll_dice(self))
+    CoopAl::Value.platinum(roll)
   end
 
   def gold
-    CoopAl::Value.gold(roll_dice(self))
+    CoopAl::Value.gold(roll)
   end
 
   def silver
-    CoopAl::Value.silver(roll_dice(self))
+    CoopAl::Value.silver(roll)
   end
 
   def copper
-    CoopAl::Value.copper(roll_dice(self))
+    CoopAl::Value.copper(roll)
   end
 
   def electrum
-    CoopAl::Value.electrum(roll_dice(self))
+    CoopAl::Value.electrum(roll)
   end
 
   alias gp gold

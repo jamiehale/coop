@@ -24,7 +24,7 @@ module CoopAl
     end
 
     def run(state, log)
-      @entries[roll_dice("d#{@entries.count}") - 1].run(state, log)
+      @entries[roll("d#{@entries.count}") - 1].run(state, log)
     end
   end
 end
