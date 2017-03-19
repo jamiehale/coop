@@ -40,3 +40,4 @@ require 'coop_al/bestiary_generator'
 
 require 'coop_al/session_log_converter'
 require 'coop_al/yaml_session_log_formatter'
+require 'coop_al/json_session_log_formatter'

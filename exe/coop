@@ -150,6 +150,7 @@ if options[:session_log_file]
     when :text
       log.dump(f)
     when :json
+      CoopAl::JsonSessionLogFormatter.new(f).write(log)
     when :yaml
       CoopAl::YamlSessionLogFormatter.new(f).write(log)
     when :csv
