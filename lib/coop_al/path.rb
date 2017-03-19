@@ -46,6 +46,10 @@ module CoopAl
       to_s == other.to_s
     end
 
+    def <=>(other)
+      to_s <=> other.to_s
+    end
+
     def +(other)
       local_path = other.is_a?(Path) ? other : Path.parse(other)
       return local_path if local_path.absolute?

@@ -63,9 +63,12 @@ module CoopAl
     end
 
     def available_paths
-      @state.available_paths(@library).map do |p|
-        return ['Downtime'] if p.root?
-        "#{@library.resolve(p).description} (#{p})"
+      @state.available_paths(@library).sort.map do |p|
+        if p.root?
+          'Downtime (downtime)'
+        else
+          "#{@library.resolve(p).description} (#{p})"
+        end
       end
     end
   end
