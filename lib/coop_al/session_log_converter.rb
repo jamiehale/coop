@@ -18,14 +18,17 @@ module CoopAl
     def session_to_obj(session)
       {
         'adventure' => session.adventure_name,
-        'session_number' => session.number,
+        'number' => session.number,
         'date' => session.date,
+        'dm_name' => session.dm_name,
         'starting_xp' => session.starting_xp,
         'xp_earned' => session.xp_earned,
         'xp_total' => session.xp_total,
         'starting_treasure' => session.starting_treasure.to_s,
         'treasure_earned' => session.treasure_earned.to_s,
-        'treasure_total' => session.treasure_total.to_s,
+        'total_treasure' => session.treasure_total.to_s,
+        'starting_level' => session.starting_level,
+        'ending_level' => session.ending_level,
         'encounters' => encounters_to_array(session.encounters)
       }
     end

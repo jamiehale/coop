@@ -148,7 +148,7 @@ if options[:session_log_file]
   File.open(options[:session_log_file], 'w') do |f|
     case options[:session_log_format]
     when :text
-      log.dump(f)
+      CoopAl::TextSessionLogFormatter.new(f).write(log)
     when :json
       CoopAl::JsonSessionLogFormatter.new(f).write(log)
     when :yaml

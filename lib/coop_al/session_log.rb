@@ -27,11 +27,6 @@ module CoopAl
       active_session.add_encounter(Downtime.new)
     end
 
-    def dump(s)
-      @sessions.each { |e| e.dump(s) }
-      s.puts "Session Count: #{@sessions.size}"
-    end
-
     private
 
     def ensure_active_session(adventure_name)

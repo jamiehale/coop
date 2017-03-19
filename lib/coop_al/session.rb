@@ -3,7 +3,7 @@ module CoopAl
   # Session
   #
   class Session
-    attr_reader :number, :adventure_name, :starting_xp, :starting_treasure, :encounters
+    attr_reader :number, :adventure_name, :dm_name, :starting_xp, :starting_treasure, :encounters
 
     def initialize(number, date_generator, adventure_name, dm_name, starting_xp, starting_treasure, encounter_count)
       @number = number
@@ -46,18 +46,12 @@ module CoopAl
       @starting_treasure + treasure_earned
     end
 
-    def dump(s)
-      s.puts "Adventure: #{@adventure_name}"
-      s.puts "Session ##{@number}: #{@date_generator.session(@number)}"
-      s.puts "DM: #{@dm_name}"
-      s.puts "Starting XP: #{@starting_xp} (level #{level(@starting_xp)})"
-      s.puts "XP Earned: #{xp_earned}"
-      s.puts "XP Total: #{@starting_xp + xp_earned} (level #{level(@starting_xp + xp_earned)})"
-      s.puts "Starting Treasure: #{@starting_treasure}"
-      s.puts "Treasure +/-: #{treasure_earned}"
-      s.puts "Treasure Total: #{@starting_treasure + treasure_earned}"
-      @encounters.each { |e| e.dump(s) if e.counts? }
-      s.puts
+    def starting_level
+      level(@starting_xp)
+    end
+
+    def ending_level
+      level(xp_total)
     end
 
     private

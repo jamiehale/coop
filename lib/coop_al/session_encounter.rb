@@ -22,14 +22,6 @@ module CoopAl
       @monsters.map { |m| pluralize(m, @monster_counts[m]) }.join(', ')
     end
 
-    def dump(s)
-      s.puts "Encounter: #{@name}"
-      s.puts " Monsters: #{monsters_s}"
-      s.puts " XP: #{@xp}"
-      s.puts " Treasure: #{@treasure}" unless @treasure.zero?
-      s.puts " Items: #{items_s}" unless @items.empty?
-    end
-
     private
 
     def monster_counts(monsters)
