@@ -37,4 +37,6 @@ require 'coop_al/loot'
 require 'coop_al/state_reporter'
 require 'coop_al/bestiary_populator'
 require 'coop_al/bestiary_generator'
+
+require 'coop_al/session_log_converter'
 require 'coop_al/yaml_session_log_formatter'
