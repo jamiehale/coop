@@ -101,6 +101,10 @@ until ARGV.empty?
     parameter = ARGV.shift
     usage if parameter.nil?
     options[:dm_name] = parameter
+  when '--session-log-file'
+    parameter = ARGV.shift
+    usage if parameter.nil?
+    options[:session_log_file] = parameter
   when '--srd'
     resource_files << File.expand_path('../res/srd.rb', File.dirname(__FILE__))
   when '--trace'
@@ -111,27 +115,31 @@ until ARGV.empty?
 end
 
 usage('No resources specified') if resource_files.empty?
-begin
+#begin
   resource_files.each do |filename|
     require filename
   end
-rescue StandardError => e
-  puts e
-  exit
-end
+#rescue StandardError => e
+#  puts e
+#  exit
+#end
 
 date_generator = CoopAl::SessionDateGenerator.new(options)
 log = CoopAl::SessionLog.new(date_generator, options)
 
 state = CoopAl::State.new
 follower = CoopAl::PathFollower.new(CoopAl::Library.instance, state)
-begin
+#begin
   follower.follow(paths, log)
-rescue StandardError => e
-  puts e
-  exit
-end
+#rescue StandardError => e
+#  puts e
+#  exit
+#end
 
 CoopAl::StateReporter.new(state, CoopAl::Library.instance, options).report(STDOUT)
 
-log.dump(STDOUT)
+if options[:session_log_file]
+  File.open(options[:session_log_file], 'w') do |f|
+    log.dump(f)
+  end
+end
